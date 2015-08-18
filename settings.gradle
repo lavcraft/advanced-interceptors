@@ -1,0 +1,4 @@
+include 'cxf'
+
+rootProject.name = 'logging-interceptors'
+

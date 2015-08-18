@@ -1,0 +1,117 @@
+buildscript {
+  repositories {
+    mavenLocal()
+    jcenter()
+  }
+  dependencies {
+    classpath 'org.zeroturnaround:gradle-jrebel-plugin:1.+'
+    classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:2.2.+'
+  }
+}
+
+plugins {
+  id 'nebula.nebula-release' version '2.2.5'
+  id "io.spring.dependency-management" version "0.5.2.RELEASE"
+  id "com.jfrog.bintray" version "1.3.1"
+}
+
+allprojects {
+  version = '1.0.0.SNAPSHOT'
+  group = 'lavcraft.test.wiremock'
+
+
+  apply plugin: 'idea'
+  apply plugin: 'io.spring.dependency-management'
+  apply plugin: 'provided-base'
+  apply plugin: 'findbugs'
+  apply plugin: 'checkstyle'
+
+  dependencyManagement {
+    dependencies {
+      dependencySet(group: 'org.apache.cxf', version: '3.1.0') {
+        entry 'cxf-core'
+        entry 'cxf-rt-frontend-jaxws'
+        entry 'cxf-rt-transports-http'
+        entry 'cxf-rt-ws-security'
+        entry 'cxf-rt-bindings-soap'
+      }
+
+      dependency 'org.projectlombok:lombok:1.16.4'
+      dependency 'org.codehaus.groovy:groovy-all:2.4.4'
+      dependency 'io.fastjson:boon:0.30'
+
+      dependency 'org.slf4j:slf4j-api:1.7.12'
+      dependency 'ch.qos.logback:logback-classic:1.1.2'
+
+      dependency 'org.spockframework:spock-core:1.0-groovy-2.4'
+      dependency 'junit:junit:4.11'
+      dependency 'com.github.tomakehurst:wiremock:1.57'
+      dependency 'com.github.stefanbirkner:system-rules:1.12.1'
+    }
+  }
+
+  task resolveAllDependencies {
+    doLast {
+      configurations.all { it.resolve() }
+    }
+  }
+}
+
+subprojects {
+  apply plugin: 'java'
+  apply plugin: 'groovy'
+
+  compileJava {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+  }
+
+  dependencies {
+    provided "org.projectlombok:lombok"
+    compile 'org.codehaus.groovy:groovy-all'
+    compile 'org.slf4j:slf4j-api'
+
+    testCompile 'junit:junit'
+    testCompile 'org.spockframework:spock-core'
+  }
+}
+
+repositories {
+  mavenLocal()
+  jcenter()
+}
+
+dependencies {
+//  compile 'org.slf4j:slf4j-api:1.7.12'
+//  testCompile 'junit:junit:4.12'
+}
+
+project(':cxf') {
+  apply plugin: 'com.jfrog.bintray'
+  bintray {
+    user = bintray_user
+    key = bintray_key
+    pkg {
+      repo = 'maven'
+//      userOrg = 'org.apache.cxf'
+      licenses = ['Apache-2.0']
+      name = 'org.apache.cxf.logging-interceptor'
+      labels = ['apache', 'cxf', 'interceptor']
+      version {
+        name = '0.0.1-SNAPSHOT'
+        desc = 'optional, version-specific description'
+      }
+    }
+  }
+
+}
+idea {
+  project {
+    languageLevel = '1.8'
+    vcs = 'Git'
+  }
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.6'
+}
