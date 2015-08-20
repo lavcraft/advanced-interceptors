@@ -63,8 +63,8 @@ subprojects {
   apply plugin: 'groovy'
   apply plugin: 'com.jfrog.bintray'
   bintray {
-    user = bintray_user
-    key = bintray_key
+    user = project.hasProperty('bintray_user') ? project.properties['bintray_user'] : null
+    key = project.hasProperty('bintray_key') ? project.properties['bintray_key'] : null
     pkg {
       repo = 'maven'
       licenses = ['MIT']
