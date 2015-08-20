@@ -1,7 +1,9 @@
 package org.cxf.interceptor
 
 import org.apache.cxf.common.i18n.UncheckedException
+import org.apache.cxf.message.Exchange
 import org.apache.cxf.message.Message
+import org.cxf.interceptor.logging.CustomizableCxfInterceptor
 import org.cxf.interceptor.test.NestedObject
 import org.cxf.interceptor.test.RequestWithDNestedObject
 import spock.lang.Specification
@@ -25,6 +27,9 @@ class CustomizableCxfInterceptorSpec extends Specification {
 
     def msgMock = Mock(Message) {
       getContent(_) >> [targetObject]
+      getExchange() >> Mock(Exchange) {
+        getEndpoint() >> null
+      }
     }
 
     def interceptorSpy = Spy(CustomizableCxfInterceptor, constructorArgs: ['setup', consumer])
@@ -37,10 +42,11 @@ class CustomizableCxfInterceptorSpec extends Specification {
     1 * interceptorSpy.logUnexpectedException(_)
 
     where:
-    consumer << [{ it -> throw new Exception("Exception") },
-                 { it -> throw new RuntimeException("Exception") }]
+    consumer << [{ logger, obj -> throw new Exception("Exception") },
+                 { logger, obj -> throw new RuntimeException("Exception") }]
   }
 
+  @SuppressWarnings("GroovyAssignabilityCheck")
   def 'should throw Fault exception'() {
     given:
     def targetObject = RequestWithDNestedObject.builder()
@@ -52,12 +58,17 @@ class CustomizableCxfInterceptorSpec extends Specification {
 
     def msgMock = Mock(Message) {
       getContent(_) >> [targetObject]
+      getExchange() >> Mock(Exchange) {
+        getEndpoint() >> null
+      }
     }
 
-    def interceptorSpy = Spy(CustomizableCxfInterceptor, constructorArgs:
-        ['setup',
-         { it -> throw new UncheckedException(new org.apache.cxf.common.i18n.Message("", Logger.getLogger("TEST")))}
-        ]
+    def interceptorSpy = Spy(CustomizableCxfInterceptor,
+        constructorArgs: ['setup',
+                          { logger ->
+                            throw new UncheckedException(
+                                new org.apache.cxf.common.i18n.Message("", Logger.getLogger("TEST")))
+                          }]
     )
 
     when:

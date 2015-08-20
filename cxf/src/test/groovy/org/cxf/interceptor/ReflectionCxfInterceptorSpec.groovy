@@ -6,6 +6,7 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean
 import org.apache.cxf.message.Message
 import org.apache.cxf.phase.Phase
 import org.boon.Boon
+import org.cxf.interceptor.logging.ReflectionCxfInterceptor
 import org.cxf.interceptor.test.NestedObject
 import org.cxf.interceptor.test.RequestWithDNestedObject
 import org.cxf.interceptor.test.ws.HelloWorld

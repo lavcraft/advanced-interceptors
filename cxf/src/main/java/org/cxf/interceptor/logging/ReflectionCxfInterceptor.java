@@ -1,4 +1,4 @@
-package org.cxf.interceptor;
+package org.cxf.interceptor.logging;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.cxf.interceptor.Fault;
