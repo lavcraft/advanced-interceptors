@@ -45,6 +45,7 @@ allprojects {
 
       dependency 'org.spockframework:spock-core:1.0-groovy-2.4'
       dependency 'junit:junit:4.11'
+      dependency 'cglib:cglib:3.1'
       dependency 'com.github.tomakehurst:wiremock:1.57'
       dependency 'com.github.stefanbirkner:system-rules:1.12.1'
     }
@@ -60,7 +61,23 @@ allprojects {
 subprojects {
   apply plugin: 'java'
   apply plugin: 'groovy'
-
+  apply plugin: 'com.jfrog.bintray'
+  bintray {
+    user = bintray_user
+    key = bintray_key
+    pkg {
+      repo = 'maven'
+      licenses = ['MIT']
+      name = 'cxf.logging.interceptor'
+      labels = ['apache', 'cxf', 'interceptor']
+      vcsUrl = 'git@github.com:lavcraft/logging-interceptors.git'
+      publicDownloadNumbers = true
+      version {
+        name = '0.0.1'
+        desc = 'optional, version-specific description'
+      }
+    }
+  }
   compileJava {
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
@@ -86,25 +103,6 @@ dependencies {
 //  testCompile 'junit:junit:4.12'
 }
 
-project(':cxf') {
-  apply plugin: 'com.jfrog.bintray'
-  bintray {
-    user = bintray_user
-    key = bintray_key
-    pkg {
-      repo = 'maven'
-//      userOrg = 'org.apache.cxf'
-      licenses = ['Apache-2.0']
-      name = 'org.apache.cxf.logging-interceptor'
-      labels = ['apache', 'cxf', 'interceptor']
-      version {
-        name = '0.0.1-SNAPSHOT'
-        desc = 'optional, version-specific description'
-      }
-    }
-  }
-
-}
 idea {
   project {
     languageLevel = '1.8'

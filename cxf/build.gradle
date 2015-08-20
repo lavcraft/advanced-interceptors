@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
+apply plugin: 'maven-publish'
 
 repositories {
   mavenLocal()
@@ -17,5 +18,17 @@ dependencies {
   compile 'com.github.tomakehurst:wiremock'
   compile 'io.fastjson:boon'
 
+  testCompile 'cglib:cglib'
   testCompile 'com.github.stefanbirkner:system-rules'
+}
+
+publishing {
+  publications {
+    MyPublication(MavenPublication) {
+      from components.java
+      groupId 'org.apache.cxf.interceptor'
+      artifactId 'logging'
+      version '1.0-RELEASE'
+    }
+  }
 }
