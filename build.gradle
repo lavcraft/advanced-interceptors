@@ -73,7 +73,7 @@ subprojects {
       vcsUrl = 'git@github.com:lavcraft/logging-interceptors.git'
       publicDownloadNumbers = true
       version {
-        name = '0.0.1'
+        name = '0.1.1'
         desc = 'optional, version-specific description'
       }
     }
