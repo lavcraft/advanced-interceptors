@@ -22,6 +22,10 @@ dependencies {
   testCompile 'com.github.stefanbirkner:system-rules'
 }
 
+task sourceJar(type: Jar) {
+  from sourceSets.main.allSource
+}
+
 publishing {
   publications {
     MyPublication(MavenPublication) {
@@ -29,6 +33,10 @@ publishing {
       groupId 'org.apache.cxf.interceptor'
       artifactId 'logging'
       version '1.0.1-RELEASE'
+
+      artifact sourceJar {
+        classifier "sources"
+      }
     }
   }
 }

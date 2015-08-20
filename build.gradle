@@ -23,8 +23,8 @@ allprojects {
   apply plugin: 'idea'
   apply plugin: 'io.spring.dependency-management'
   apply plugin: 'provided-base'
-  apply plugin: 'findbugs'
-  apply plugin: 'checkstyle'
+//  apply plugin: 'findbugs'
+//  apply plugin: 'checkstyle'
 
   dependencyManagement {
     dependencies {
